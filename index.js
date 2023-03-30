@@ -1,10 +1,13 @@
 import { catsData } from '/data.js'
+
 const emotionsRadio = document.getElementById("emotion-radios")
 const getImageBtn = document.getElementById("get-image-btn")
 const gifsOnly = document.getElementById("gifs-only-option")
+const memeModalInner = document.getElementById('meme-modal-inner')
+const memeModal = document.getElementById('meme-modal')
 
 emotionsRadio.addEventListener('change', highlightCheckedOption)
-getImageBtn.addEventListener('click', getMatchingCatsArray)
+getImageBtn.addEventListener('click', renderCat)
 
 
 function highlightCheckedOption(e){
@@ -22,6 +25,7 @@ function getMatchingCatsArray(){
         const isGif = gifsOnly.checked
 
         const matchingCatsArray = catsData.filter(function(cat){
+
             if(isGif){
                 return emotionTags.includes(selectedEmotion) && cat.isGif
             }else{
@@ -35,10 +39,27 @@ function getMatchingCatsArray(){
 
 function getSingleCatObject(){
     const catsArray = getMatchingCatsArray()
+
+    if(catsArray.length === 1){
+        return catsArray[0]
+    }
+    else{
+        const randomNumber = Math.floor(Math.random() * catsArray.length)
+        return catsArray[randomNumber]
+        
+    }
 }
 
 function renderCat(){
-    
+    const catObject = getSingleCatObject()
+    memeModalInner.innerHTML = `
+    <img 
+    class="cat-img" 
+    src="./images/${catObject.image}"
+    alt="${catObject.alt}"
+    >
+    `
+    memeModal.style.display = "flex"
 }
 
 function getEmotionsArray(cats){
